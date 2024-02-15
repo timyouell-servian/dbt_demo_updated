@@ -2,7 +2,7 @@
 
 {{
     config(
-      target_schema='dev_eferreira',
+      target_schema=env_var('DBT_SNP_SCHEMA'),
       unique_key='order_id',
       strategy='timestamp',
       updated_at='updated_at',
