@@ -28,7 +28,7 @@ dispatch:
 models:
   jaffle_shop:
     materialized: table
-    docs_background_color: 10C3C3
+    docs_background_color: white
     staging:
       +materialized: view
     marts:
@@ -40,6 +40,9 @@ tests:
   +store_failures: true
   dbt_project_evaluator:
     +severity: "{{ env_var('DBT_PROJECT_EVALUATOR_SEVERITY', 'warn') }}"
+  jaffle_shop:
+    assert_fct_orders_compare_all_columns_with_baseline:
+      +enabled: true
 
 seeds:
   dbt_project_evaluator:

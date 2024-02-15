@@ -1,7 +1,7 @@
 {%- call statement('get_last_month_query', fetch_result=True) -%}
     select
       max(date_part(month, order_date))
-     from dev.dev_eferreira.fct_orders_snapshot
+     from {{env_var('DBT_DB')}}.{{env_var('DBT_SNP_SCHEMA')}}.fct_orders_snapshot
     {#from {{ ref('fct_orders_snapshot') }}#}
 {%- endcall -%}
 
@@ -13,7 +13,7 @@ with
             compare_all_columns_with_baseline(
                 a_relation=ref("fct_orders"),
                 b_relation=api.Relation.create(
-                    database="dev", schema="dev_eferreira", identifier="fct_orders_snapshot"
+                    database=env_var('DBT_DB'), schema=env_var('DBT_SNP_SCHEMA'), identifier="fct_orders_snapshot"
                 ),
                 primary_key="order_id",
                 datetime_column_name="order_date",
