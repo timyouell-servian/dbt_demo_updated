@@ -42,7 +42,7 @@ tests:
     +severity: "{{ env_var('DBT_PROJECT_EVALUATOR_SEVERITY', 'warn') }}"
   jaffle_shop:
     assert_fct_orders_compare_all_columns_with_baseline:
-      +enabled: false
+      +enabled: true
 
 seeds:
   dbt_project_evaluator:
