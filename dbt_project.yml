@@ -27,6 +27,9 @@ dispatch:
 
 models:
   jaffle_shop:
+    +persist_docs: 
+      relation: true
+      columns: true
     materialized: table
     docs_background_color: white
     staging:
