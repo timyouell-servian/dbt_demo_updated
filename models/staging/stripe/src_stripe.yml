@@ -2,10 +2,10 @@ version: 2
 
 sources:
   - name: stripe
-    database: dev
-    schema: stripe
+    database: cog01hpgr8d5q67r11jdaa7efe3s1
+    schema: raw_data
     tables:
-      - name: payment
+      - name: payments
         loaded_at_field: _batched_at
         freshness:
           warn_after: {count: 12, period: hour}

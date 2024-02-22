@@ -2,8 +2,8 @@ version: 2
 
 sources:
   - name: jaffle_shop
-    database: dev
-    schema: jaffle_shop
+    database: cog01hpgr8d5q67r11jdaa7efe3s1
+    schema: raw_data
     tables:
       - name: customers
         columns:

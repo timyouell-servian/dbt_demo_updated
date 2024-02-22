@@ -17,7 +17,7 @@ with
             orders.customer_id,
             orders.order_date,
             coalesce(order_payments.amount, 0) + 10 as amount,
-            getdate() as updated_at
+            CURRENT_DATETIME() as updated_at
 
         from orders
         left join order_payments on orders.order_id = order_payments.order_id
@@ -25,4 +25,4 @@ with
 
 select *
 from final
-where date_part(month, order_date) <= 4
+where extract(month from order_date) <= 4
