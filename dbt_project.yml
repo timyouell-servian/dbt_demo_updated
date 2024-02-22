@@ -21,10 +21,6 @@ clean-targets:
 
 require-dbt-version: [">=1.0.0", "<2.0.0"]
 
-dispatch:
-  - macro_namespace: dbt
-    search_order: ['dbt_project_evaluator', 'dbt']
-
 models:
   jaffle_shop:
     +persist_docs: 
@@ -46,6 +42,14 @@ tests:
   jaffle_shop:
     assert_fct_orders_compare_all_columns_with_baseline:
       +enabled: true
+      +severity: warn
+    assert_stg_customer_compare_all_columns:
+      +severity: warn
+      +enabled: false
+    assert_fct_orders_compare_all_columns_with_baseline:
+      +severity: error
+      +enabled: false
+      
 
 seeds:
   dbt_project_evaluator:

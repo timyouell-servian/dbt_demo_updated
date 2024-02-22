@@ -28,7 +28,7 @@ models:
         data_type: TEXT
       - name: lifetime_value
         description: Lifetime Value
-        data_type: BIGINT
+        data_type: FLOAT64
       - name: most_recent_order_date
         description: Most recent order date
         data_type: DATE
@@ -52,7 +52,7 @@ models:
               to: ref('dim_customers')
       - name: amount
         description: Amount of value
-        data_type: BIGINT
+        data_type: FLOAT64
       - name: order_date
         description: Order Date
         data_type: DATE
@@ -64,4 +64,4 @@ models:
           - unique
       - name: updated_at
         description: Date when the record was updated.
-        data_type: timestamp
+        data_type: datetime
