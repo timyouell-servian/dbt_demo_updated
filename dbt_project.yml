@@ -51,7 +51,7 @@ tests:
       +severity: warn
       +enabled: false
     assert_fct_orders_compare_all_columns_with_baseline:
-      +severity: warn
+      +severity: error
       +enabled: false
       
 
