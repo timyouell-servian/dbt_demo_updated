@@ -24,3 +24,10 @@ models:
           - relationships:
               field: customer_id
               to: ref('stg_customers')
+
+  - name: stg_events
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
