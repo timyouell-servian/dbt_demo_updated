@@ -15,7 +15,7 @@
       *,
       {{ primary_key }} as dbt_audit_helper_pk
     from {{ a_relation }}
-    where date_part(month, {{ datetime_column_name }}) <= {{ month_value }}
+    where date_part(month, {{ datetime_column_name }}) <= {{ month_value }} -- should be {{ last_run_value }}
   {% endset %}
 
   {% set b_query %}
@@ -23,7 +23,7 @@
       *,
       {{ primary_key }} as dbt_audit_helper_pk
     from {{ b_relation }}
-    where date_part(month, {{ datetime_column_name }}) <= {{ month_value }}
+    where date_part(month, {{ datetime_column_name }}) <= {{ month_value }} -- should be {{ last_run_value }}
     {% if timestamp_snapshot %}
     and dbt_valid_to is null
     {% endif %}

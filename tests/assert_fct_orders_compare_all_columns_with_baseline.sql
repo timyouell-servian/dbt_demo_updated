@@ -1,6 +1,6 @@
 {%- call statement('get_last_month_query', fetch_result=True) -%}
     select
-      max(date_part(month, order_date))
+      max(date_part(month, order_date)) --max run_id if avaialable OR max run 1 date, run 2 date etc.
      from {{env_var('DBT_DB')}}.{{env_var('DBT_SNP_SCHEMA')}}.fct_orders_snapshot
     {#from {{ ref('fct_orders_snapshot') }}#}
 {%- endcall -%}

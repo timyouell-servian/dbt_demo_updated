@@ -51,7 +51,6 @@ tests:
     assert_fct_orders_compare_all_columns_with_baseline:
       +severity: error
       +enabled: false
-      
 
 seeds:
   dbt_project_evaluator:

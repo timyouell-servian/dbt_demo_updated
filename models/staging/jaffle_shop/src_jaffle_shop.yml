@@ -30,4 +30,17 @@ sources:
             tests:
               - unique
               - not_null
+      - name: condition_testing
+        columns:
+          - name: agg_month
+            description: aggregated_month
 
+      - name: test_clone
+        columns:
+          - name: sum_id
+            description: primary key
+
+      - name: test_model
+        columns:
+          - name: sum_id
+            description: primary key

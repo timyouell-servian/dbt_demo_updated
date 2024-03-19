@@ -9,7 +9,7 @@
         )
     }}
 
-    select *
+    select * 
     from {{ ref("fct_events") }}
 
 {% endsnapshot %}
