@@ -23,4 +23,24 @@ sources:
         freshness:
           warn_after: { count: 12, period: hour }
           error_after: { count: 24, period: hour }
+      - name: events
+        columns:
+          - name: event_id
+            description: The primary key for raw events data
+            tests:
+              - unique
+              - not_null
+      - name: condition_testing
+        columns:
+          - name: agg_month
+            description: aggregated_month
 
+      - name: test_clone
+        columns:
+          - name: sum_id
+            description: primary key
+
+      - name: test_model
+        columns:
+          - name: sum_id
+            description: primary key

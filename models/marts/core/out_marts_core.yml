@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: dim_customers
-    description: Customers dimension to descrribe events in fct_orders
+    description: Customers dimension to describe events in fct_orders
     config:
       contract:
         enforced: true
@@ -65,3 +65,82 @@ models:
       - name: updated_at
         description: Date when the record was updated.
         data_type: datetime
+
+  - name: fct_condition_testing
+    description: Fact table that contains condition testing for backwards aggregation data quality
+    config:
+      contract:
+        enforced: true
+    meta:
+      owner: Tim Youell
+    columns:
+      - name: agg_month
+        description: aggregated month
+        data_type: TEXT
+      - name: agg_id
+        description: aggregated identification number
+        data_type: INT
+      - name: sum_a_amount
+        description: Aggregated sum of A values
+        data_type: FLOAT64
+        #tests:
+          #- dbt_expectations.expect_column_values_to_be_between:
+          #    # compare_model: ref("test_clone")??
+          #    min_value: -100  # (Optional)
+          #    max_value: 100 # (Optional)
+          #    strictly: False # (Optional. Default is 'false'. Adds an 'or equal to' to the comparison operator for min/max)
+      - name: sum_b_amount
+        description: Aggregated sum of B values
+        data_type: FLOAT64
+
+  - name: test_model # --will become CTE table
+    description: Fact table that contains orders rows
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: sum_id
+        description: primary key
+        data_type: INTEGER
+      - name: agg_month
+        description: aggregated month
+        data_type: TEXT
+      - name: agg_id
+        description: aggregated id
+        data_type: INTEGER
+      - name: sum_a_amount
+        description: aggregated month
+        data_type: FLOAT64
+        tests:
+          - expect_column_value_difference_between_tables:
+              clone_table: ref('test_clone')
+              primary_key: 'sum_id'
+              min_value: -1
+              max_value: 1.1
+              replace_nulls_with: 'NULL'
+
+  - name: fct_events_agg_sum_amount_grp_by_lga_id
+    description: Sum aggregation of amount in events table, grouped by lga_id
+    config:
+      contract:
+        enforced: true
+    meta:
+      owner: Tim Youell
+    columns:
+      - name: event_date
+        description: date of event
+        data_type: DATE
+      - name: lga_id
+        description: lga_id (primary_key)
+        data_type: INTEGER
+      - name: total_event_amount
+        description: aggregated event amount for each lga_id
+        data_type: INTEGER
+        tests:
+          - expect_column_value_difference_between_tables:
+              clone_table: ref('clone_fct_events_agg_sum_amount_grp_by_lga_id')
+              primary_key: 'lga_id'
+              min_value: -1
+              max_value: 1
+              replace_nulls_with: 'NULL'
+              strictly: False

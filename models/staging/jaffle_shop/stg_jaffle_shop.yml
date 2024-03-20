@@ -24,3 +24,22 @@ models:
           - relationships:
               field: customer_id
               to: ref('stg_customers')
+
+  - name: stg_events
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+  
+  - name: stg_condition_testing
+    columns:
+      - name: agg_month
+
+  - name: stg_test_clone
+    columns:
+      - name: sum_id
+
+  - name: stg_test_model
+    columns:
+      - name: sum_id
