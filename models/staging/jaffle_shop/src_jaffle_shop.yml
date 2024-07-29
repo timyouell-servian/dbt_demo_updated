@@ -44,3 +44,18 @@ sources:
         columns:
           - name: sum_id
             description: primary key
+
+      - name: percent_testing
+        columns:
+          - name: ab_id
+            description: primary key
+      
+      - name: test_percent_clone
+        columns:
+          - name: ab_id
+            description: primary key
+
+      - name: test_percent_model
+        columns:
+          - name: ab_id
+            description: primary key

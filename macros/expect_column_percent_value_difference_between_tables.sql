@@ -1,9 +1,9 @@
-{%- test expect_column_value_difference_between_tables(model, compare_model, primary_key, column_name, row_condition, min_value, max_value, replace_nulls_with, strictly) -%}
+{%- test expect_column_percent_value_difference_between_tables(model, compare_model, primary_key, column_name, row_condition, min_value, max_value, replace_nulls_with, strictly) -%}
     {%- if execute -%}
 
     with base_compare_table as (
         {{
-            left_outer_join_and_diff(
+            left_outer_join_and_percent_diff(
                 model=model,
                 compare_model=compare_model,
                 primary_key=primary_key,

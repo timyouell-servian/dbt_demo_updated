@@ -2,5 +2,5 @@ with
     events as (select * from {{ ref('stg_events') }})
 
 select * from events
-where extract(month from event_date) <= 4 
+where extract(month from event_date) <= 6
 order by event_id

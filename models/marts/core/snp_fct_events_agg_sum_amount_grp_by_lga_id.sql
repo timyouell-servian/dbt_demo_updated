@@ -17,5 +17,3 @@ with
 
 select * from events
 order by event_date, lga_id
-
-

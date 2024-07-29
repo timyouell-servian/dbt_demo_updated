@@ -1,20 +1,23 @@
+--models/marts/core/fct_events_agg_sum_amount_grp_by_lga_id.sql
 {{
     config(
         materialized='view',
-        labels = {'month_2_month': 'yes'}
+        labels = {'visable_to_users': 'false'}   
     )
 }}
+--BigQuery is set to hide where false and display when true. 
+--Note: could be possible but not currently implemented.
 
-with 
-    events as (select event_id, event_date, lga_id, lga_name, lga_code,
-    case when event_id = 1001 then 1
-    else event_amount end as new_event_amount
-    from {{ ref('fct_events') }})
+{% set relation = ref('fct_events') %}
+{% set subquery = get_where_subquery(relation) %}
 
-select 
+select
+    {{ dbt_utils.generate_surrogate_key(['event_date', 'lga_id']) }} AS surrogate_key,
     event_date,
     lga_id,
-    SUM(new_event_amount) AS total_event_amount,
-    from events
-    group by event_date, lga_id
+    null_test_col,
+    SUM(event_amount) AS total_event_amount
+    from {{ ref('fct_events') }}
+    --from {{ subquery }}
+    group by event_date, lga_id, null_test_col
     order by event_date, lga_id

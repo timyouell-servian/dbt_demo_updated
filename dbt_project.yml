@@ -58,6 +58,7 @@ seeds:
         +enabled: false
 
 vars:
+  test_var: 'abc'
   dbt_project_evaluator:
     documentation_coverage_target: 75
     test_coverage_target: 75

@@ -84,11 +84,11 @@ models:
         description: Aggregated sum of A values
         data_type: FLOAT64
         #tests:
-          #- dbt_expectations.expect_column_values_to_be_between:
-          #    # compare_model: ref("test_clone")??
-          #    min_value: -100  # (Optional)
-          #    max_value: 100 # (Optional)
-          #    strictly: False # (Optional. Default is 'false'. Adds an 'or equal to' to the comparison operator for min/max)
+        #- dbt_expectations.expect_column_values_to_be_between:
+        #    # compare_model: ref("test_clone")??
+        #    min_value: -100  # (Optional)
+        #    max_value: 100 # (Optional)
+        #    strictly: False # (Optional. Default is 'false'. Adds an 'or equal to' to the comparison operator for min/max)
       - name: sum_b_amount
         description: Aggregated sum of B values
         data_type: FLOAT64
@@ -109,38 +109,81 @@ models:
         description: aggregated id
         data_type: INTEGER
       - name: sum_a_amount
-        description: aggregated month
+        description: sum of a_amount
         data_type: FLOAT64
         tests:
           - expect_column_value_difference_between_tables:
-              clone_table: ref('test_clone')
-              primary_key: 'sum_id'
+              compare_model: ref('test_clone')
+              primary_key: "sum_id"
               min_value: -1
               max_value: 1.1
-              replace_nulls_with: 'NULL'
+              replace_nulls_with: "NULL"
+              config:
+                severity: error
+                error_if: ">5"
+                warn_if: ">0"
 
   - name: fct_events_agg_sum_amount_grp_by_lga_id
-    description: Sum aggregation of amount in events table, grouped by lga_id
+    description: Sum aggregation of amount in events table, grouped by lga_id # and {{ get_max_yearmonth("clone_fct_events_agg_sum_amount_grp_by_lga_id", "event_date") }}
     config:
       contract:
         enforced: true
     meta:
       owner: Tim Youell
     columns:
+      - name: surrogate_key
+        description: the accumulated primary key of event_date and lga_id using dbt_utils.generate_surrogate_key macro.
+        data_type: TEXT
       - name: event_date
         description: date of event
         data_type: DATE
+      - name: null_test_col
+        description: test variable
+        data_type: INTEGER
       - name: lga_id
-        description: lga_id (primary_key)
+        description: lga_id
         data_type: INTEGER
       - name: total_event_amount
         description: aggregated event amount for each lga_id
         data_type: INTEGER
         tests:
+          # - where: "event_date <= __last_run_date__"
           - expect_column_value_difference_between_tables:
-              clone_table: ref('clone_fct_events_agg_sum_amount_grp_by_lga_id')
-              primary_key: 'lga_id'
-              min_value: -1
-              max_value: 1
-              replace_nulls_with: 'NULL'
+              compare_model: ref('clone_fct_events_agg_sum_amount_grp_by_lga_id')
+              primary_key: "surrogate_key"
+              min_value: 0
+              max_value: 0
+              # row_condition: 'lga_id = {{ get_max_value(ref("clone_fct_events_agg_sum_amount_grp_by_lga_id"), "lga_id", False) }}'
+              row_condition: 'null_test_col = {{ get_max_value(ref("clone_fct_events_agg_sum_amount_grp_by_lga_id"), "null_test_col", False) }}'
+              # row_condition: 'CAST(CONCAT(EXTRACT(YEAR FROM event_date), LPAD(CAST(EXTRACT(MONTH FROM event_date) AS STRING), 2, "0")) AS INT) = {{ get_max_yearmonth(ref("clone_fct_events_agg_sum_amount_grp_by_lga_id"), "event_date") }}'
+              # row_condition: 'event_date <= {{ get_max_date(ref("clone_fct_events_agg_sum_amount_grp_by_lga_id"), "surrogate_key") }}'
+              replace_nulls_with: 0
               strictly: False
+
+  - name: test_percent_model
+    description: Fact percent table that contains orders rows
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: ab_id
+        description: primary key
+        data_type: INTEGER
+      - name: lga_id
+        description: lga id number
+        data_type: INTEGER
+      - name: sum_a_amount
+        description: sum of a_amount
+        data_type: FLOAT64
+        tests:
+          - expect_column_percent_value_difference_between_tables:
+              compare_model: ref('test_percent_clone')
+              primary_key: "ab_id"
+              min_value: -0.5
+              max_value: 0.5
+              # row_condition: "lga_id = {{ env_var('DBT_TEST_VAR') }}"
+              replace_nulls_with: CAST('NaN' AS FLOAT64)
+              #config:
+              #  severity: error
+              #  error_if: ">5"
+              #  warn_if: ">0"

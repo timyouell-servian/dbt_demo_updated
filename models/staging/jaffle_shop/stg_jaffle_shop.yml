@@ -43,3 +43,17 @@ models:
   - name: stg_test_model
     columns:
       - name: sum_id
+
+  - name: stg_percent_testing
+    columns:
+      - name: ab_id
+
+  - name: stg_test_percent_clone
+    columns:
+      - name: ab_id
+        description: primary key
+
+  - name: stg_test_percent_model
+    columns:
+      - name: ab_id
+        description: primary key
