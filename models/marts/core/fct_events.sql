@@ -4,3 +4,4 @@ with
 select * from events
 where extract(month from event_date) <= 6
 order by event_id
+
